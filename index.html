@@ -1,1 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f8f4f1" />
+    <title>Vanta Events | Private Invitation</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+      :root {
+        --page: #f8f4f1;
+        --card: #fffdfb;
+        --peach: #eec2a7;
+        --peach-deep: #d59875;
+        --peach-soft: #f9eee7;
+        --ink: #171514;
+        --ink-soft: #4d4744;
+        --line: rgba(23, 21, 20, 0.10);
+        --line-soft: rgba(23, 21, 20, 0.06);
+        --shadow: rgba(23, 21, 20, 0.06);
+      }
 
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--page);
+        color: var(--ink);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 22px;
+      }
+
+      .wrapper {
+        width: min(100%, 430px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .card {
+        width: 100%;
+        min-height: 760px;
+        position: relative;
+        background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.98));
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        box-shadow: 0 16px 34px var(--shadow);
+        overflow: hidden;
+      }
+
+      .inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+        padding: 22px 20px 18px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 14px;
+      }
+
+      .brand {
+        font-size: 10px;
+        letter-spacing: 0.26em;
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .pill {
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: var(--peach-soft);
+        border: 1px solid rgba(213, 152, 117, 0.25);
+        color: var(--peach-deep);
+        font-size: 8px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .hero {
+        padding-top: 20px;
+        text-align: center;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--peach-deep);
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 600;
+        font-size: clamp(2.6rem, 7vw, 4rem);
+        line-height: 0.92;
+        letter-spacing: 0.02em;
+        color: var(--ink);
+      }
+
+      .subtitle {
+        margin-top: 10px;
+        color: var(--ink-soft);
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .theme-box {
+        margin-top: 22px;
+        padding: 18px 16px;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        background: rgba(255,255,255,0.3);
+      }
+
+      .theme-label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--peach-deep);
+        font-size: 9px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .theme-name {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(1.8rem, 5vw, 2.4rem);
+        color: var(--ink);
+        line-height: 1.15;
+      }
+
+      .note {
+        margin-top: 18px;
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.7;
+        letter-spacing: 0.02em;
+      }
+
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 18px;
+        padding: 16px 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        background: linear-gradient(180deg, #f5d7c0, #efbd97);
+        border: 1px solid rgba(213, 152, 117, 0.28);
+        color: #1b1715;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        box-shadow: 0 10px 20px rgba(213, 152, 117, 0.12);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .cta:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 24px rgba(213, 152, 117, 0.18);
+      }
+
+      .meta-box {
+        margin-top: 18px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border: 1px solid var(--line-soft);
+        border-radius: 12px;
+        background: rgba(255,255,255,0.52);
+      }
+
+      .row span {
+        color: var(--ink-soft);
+        font-size: 9px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .row strong {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink);
+        letter-spacing: 0.06em;
+      }
+
+      .qr-wrap {
+        margin-top: 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 12px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.65);
+        border: 1px solid var(--line-soft);
+      }
+
+      .qr-box {
+        width: 120px;
+        height: 120px;
+        border-radius: 16px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        border: 1px solid rgba(17,17,17,0.08);
+      }
+
+      .qr-box canvas, .qr-box img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      .qr-copy {
+        min-width: 0;
+      }
+
+      .qr-copy small {
+        display: block;
+        color: var(--peach-deep);
+        font-size: 9px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .qr-copy strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .qr-copy p {
+        margin: 8px 0 0;
+        color: var(--ink-soft);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
+      .footer {
+        margin-top: auto;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        text-align: center;
+        color: rgba(23,21,20,0.58);
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .actions {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+      }
+
+      .download-btn {
+        flex: 1;
+        border: 1px solid rgba(23,21,20,0.12);
+        background: rgba(255,255,255,0.72);
+        color: var(--ink);
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      }
+
+      .download-btn.secondary {
+        background: rgba(239, 189, 151, 0.12);
+        border-color: rgba(213, 152, 117, 0.28);
+      }
+
+      .download-btn:hover {
+        transform: translateY(-1px);
+        border-color: rgba(213, 152, 117, 0.35);
+      }
+
+      @media (max-width: 420px) {
+        body { padding: 14px; }
+        .card { min-height: 700px; border-radius: 22px; }
+        .inner { padding-left: 16px; padding-right: 16px; }
+        .row { padding-left: 12px; padding-right: 12px; }
+        .qr-box { width: 104px; height: 104px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="card" id="inviteCard">
+        <div class="inner">
+          <header class="topbar">
+            <div class="brand">VANTA EVENTS</div>
+            <div class="pill">Private</div>
+          </header>
+
+          <div class="hero">
+            <div class="eyebrow">An invitation for Vanessa</div>
+            <h1>Vanessa</h1>
+            <div class="subtitle">Private guest access</div>
+
+            <div class="theme-box">
+              <span class="theme-label">Theme</span>
+              <div class="theme-name">The tailored season : After sunset</div>
+            </div>
+
+            <p class="note">
+              Tap Open My Invitation and go to the final slide to confirm if you’ll be able to attend.
+            </p>
+          </div>
+
+          <div class="meta-box">
+            <div class="row">
+              <span>Date</span>
+              <strong>To be confirmed</strong>
+            </div>
+            <div class="row">
+              <span>Time</span>
+              <strong>To be confirmed</strong>
+            </div>
+            <div class="row">
+              <span>Venue</span>
+              <strong>To be confirmed</strong>
+            </div>
+          </div>
+
+          <a
+            class="cta"
+            href="https://thehighestbeautygh.github.io/vanta-events-demo/?token=1fc1a6636da664c6674d41cf573b0670dd7dec190a29635ffee5ab749fb12c3a"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View My Invitation
+          </a>
+
+          <div class="qr-wrap">
+            <div class="qr-box">
+              <div id="qrCode" aria-label="Reception Check-in QR code"></div>
+            </div>
+            <div class="qr-copy">
+              <small>Reception Check-in</small>
+              <strong>Staff verification</strong>
+              <p>Scan to confirm Vanessa’s arrival at the reception desk.</p>
+            </div>
+          </div>
+
+          <div class="footer">Vanta Events</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="download-btn" id="downloadPng" type="button">Download Invitation</button>
+        <button class="download-btn secondary" id="downloadJpg" type="button">JPG</button>
+      </div>
+    </div>
+
+    <script>
+      const receptionToken = "7647b48dc6d23e3f1ceb8c13fb27e238653c8bcc6840d137c994be82b534d152";
+
+      new QRCode(document.getElementById("qrCode"), {
+        text: receptionToken,
+        width: 116,
+        height: 116,
+        colorDark: "#171514",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+
+      function downloadImage(type) {
+        const card = document.getElementById("inviteCard");
+
+        html2canvas(card, {
+          backgroundColor: "#f8f4f1",
+          scale: 2,
+          useCORS: true,
+          logging: false
+        }).then((canvas) => {
+          const dataUrl = canvas.toDataURL(type === "jpg" ? "image/jpeg" : "image/png", type === "jpg" ? 0.95 : undefined);
+          const link = document.createElement("a");
+          link.href = dataUrl;
+          link.download = "vanessa-private-invitation." + (type === "jpg" ? "jpg" : "png");
+          link.click();
+        });
+      }
+
+      document.getElementById("downloadPng").addEventListener("click", () => downloadImage("png"));
+      document.getElementById("downloadJpg").addEventListener("click", () => downloadImage("jpg"));
+    </script>
+  </body>
+</html>
